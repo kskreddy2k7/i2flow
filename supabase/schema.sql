@@ -65,19 +65,32 @@ create policy "Categories are viewable by everyone" on public.categories for sel
 create policy "Resources are viewable by everyone" on public.resources for select using (true);
 create policy "Social links are viewable by everyone" on public.social_links for select using (true);
 
--- Allow public to increment downloads via a secure function or allow update of downloads count only
--- However, for strict security, only founders can INSERT/UPDATE/DELETE
+-- Only authenticated founders can manage database records
 create policy "Founders can manage categories" on public.categories 
-  for all using (auth.email() = 'official.i2flow.ai@gmail.com');
+  for all using (auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com');
   
 create policy "Founders can manage resources" on public.resources 
-  for all using (auth.email() = 'official.i2flow.ai@gmail.com');
+  for all using (auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com');
 
 create policy "Founders can manage social links" on public.social_links 
-  for all using (auth.email() = 'official.i2flow.ai@gmail.com');
+  for all using (auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com');
+
+-- Atomic public downloads increment function
+create or replace function public.increment_downloads(resource_id uuid)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  update public.resources
+  set downloads_count = coalesce(downloads_count, 0) + 1
+  where id = resource_id;
+end;
+$$;
 
 -- 4. Storage Buckets
-insert into storage.buckets (id, name, public) values ('resources', 'resources', true);
+insert into storage.buckets (id, name, public) values ('resources', 'resources', true)
+  on conflict (id) do update set public = true;
 
 -- Storage RLS Policies
 create policy "Public Access to resources" 
@@ -86,12 +99,12 @@ create policy "Public Access to resources"
 
 create policy "Founder Upload Access" 
   on storage.objects for insert 
-  with check ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  with check ( bucket_id = 'resources' and auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com' );
 
 create policy "Founder Update Access" 
   on storage.objects for update 
-  using ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  using ( bucket_id = 'resources' and auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com' );
 
 create policy "Founder Delete Access" 
   on storage.objects for delete 
-  using ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  using ( bucket_id = 'resources' and auth.role() = 'authenticated' and auth.jwt() ->> 'email' = 'official.i2flow.ai@gmail.com' );

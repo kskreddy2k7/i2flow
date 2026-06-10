@@ -79,15 +79,8 @@ export async function deleteResource(id: string): Promise<void> {
 }
 
 export async function incrementDownload(id: string): Promise<void> {
-  // Since we want to increment atomically without knowing current count:
-  // Supabase provides an rpc for atomic increments, but we'll try simple update
-  // or a serverless function if needed. For now, read then update.
-  const { data, error } = await supabase.from('resources').select('downloads_count').eq('id', id).single();
-  if (!error && data) {
-    await supabase.from('resources').update({
-      downloads_count: (data.downloads_count || 0) + 1
-    }).eq('id', id);
-  }
+  const { error } = await supabase.rpc('increment_downloads', { resource_id: id });
+  if (error) throw error;
 }
 
 // Social Links API
