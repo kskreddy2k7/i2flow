@@ -90,7 +90,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onProjectsClick }) =
           justifyContent: 'center',
         }} className="hero-logo-container">
           <img 
-            src="/images/logo.jpg" 
+            src="images/logo.jpg" 
             alt="I2Flow Logo" 
             style={{
               maxWidth: '100%',

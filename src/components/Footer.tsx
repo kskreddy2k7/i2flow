@@ -32,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick, onAdminToggle }) => 
         {/* Brand */}
         <div style={{ gridColumn: '1 / -1', maxWidth: '300px' }}>
           <img 
-            src="/images/logo.jpg" 
+            src="images/logo.jpg" 
             alt="I2Flow Logo" 
             style={{ width: '48px', height: '48px', borderRadius: '50%', marginBottom: '16px' }} 
           />

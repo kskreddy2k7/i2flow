@@ -123,9 +123,9 @@ const LogoModel: React.FC<SceneProps> = ({ scroll, mouse }) => {
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = 'anonymous'; // request CORS access if served from CDN or proxy
-    img.src = '/images/logo.jpg';
+    img.src = 'images/logo.jpg';
     img.onerror = (err) => {
-      console.error("Failed to load logo image /images/logo.jpg:", err);
+      console.error("Failed to load logo image images/logo.jpg:", err);
     };
     img.onload = () => {
       try {
