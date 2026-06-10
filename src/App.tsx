@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SunriseBackground from './components/SunriseBackground';
-import SocialLinks from './components/SocialLinks';
+import ConnectSection from './components/ConnectSection';
 import ResourceLibrary from './components/ResourceLibrary';
 import ResourceDetail from './components/ResourceDetail';
 import Timeline from './components/Timeline';
@@ -122,8 +122,8 @@ export const App: React.FC = () => {
           <Hero onExploreClick={() => handleNavClick('resources')} onProjectsClick={() => handleNavClick('projects')} />
 
           <div style={{ background: 'rgba(5, 5, 5, 0.7)', position: 'relative', zIndex: 10 }}>
-            {/* Social Links */}
-            <SocialLinks />
+            {/* Connect With I2Flow Section */}
+            <ConnectSection />
 
             {/* Latest Resources / Resource Library */}
             <ResourceLibrary resources={publishedResources} categories={categories} onSelectResource={setSelectedResource} />

@@ -108,3 +108,37 @@ export async function uploadFile(file: File, folder: string): Promise<string> {
   const { data } = supabase.storage.from('resources').getPublicUrl(filePath);
   return data.publicUrl;
 }
+
+export interface JourneyStats {
+  projects_built: number;
+  resources_published: number;
+  instagram_posts: number;
+  github_repositories: number;
+}
+
+export async function getJourneyStats(): Promise<JourneyStats> {
+  const { data: resources, error } = await supabase
+    .from('resources')
+    .select('github_url, source_code_url, demo_url, instagram_url, is_published');
+    
+  if (error) {
+    console.error("Error fetching journey stats:", error);
+    return { projects_built: 0, resources_published: 0, instagram_posts: 0, github_repositories: 0 };
+  }
+  
+  if (!resources) {
+    return { projects_built: 0, resources_published: 0, instagram_posts: 0, github_repositories: 0 };
+  }
+  
+  const projects_built = resources.filter(r => r.source_code_url || r.github_url || r.demo_url).length;
+  const resources_published = resources.filter(r => r.is_published !== false).length;
+  const instagram_posts = resources.filter(r => r.instagram_url).length;
+  const github_repositories = resources.filter(r => r.github_url).length;
+  
+  return {
+    projects_built,
+    resources_published,
+    instagram_posts,
+    github_repositories
+  };
+}
