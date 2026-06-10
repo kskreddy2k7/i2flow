@@ -77,21 +77,21 @@ create policy "Founders can manage social links" on public.social_links
   for all using (auth.email() = 'official.i2flow.ai@gmail.com');
 
 -- 4. Storage Buckets
-insert into storage.buckets (id, name, public) values ('i2flow-assets', 'i2flow-assets', true);
+insert into storage.buckets (id, name, public) values ('resources', 'resources', true);
 
 -- Storage RLS Policies
-create policy "Public Access to i2flow-assets" 
+create policy "Public Access to resources" 
   on storage.objects for select 
-  using ( bucket_id = 'i2flow-assets' );
+  using ( bucket_id = 'resources' );
 
 create policy "Founder Upload Access" 
   on storage.objects for insert 
-  with check ( bucket_id = 'i2flow-assets' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  with check ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );
 
 create policy "Founder Update Access" 
   on storage.objects for update 
-  using ( bucket_id = 'i2flow-assets' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  using ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );
 
 create policy "Founder Delete Access" 
   on storage.objects for delete 
-  using ( bucket_id = 'i2flow-assets' and auth.email() = 'official.i2flow.ai@gmail.com' );
+  using ( bucket_id = 'resources' and auth.email() = 'official.i2flow.ai@gmail.com' );

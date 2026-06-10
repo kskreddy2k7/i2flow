@@ -109,9 +109,9 @@ export async function uploadFile(file: File, folder: string): Promise<string> {
   const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
   const filePath = `${folder}/${fileName}`;
 
-  const { error } = await supabase.storage.from('i2flow-assets').upload(filePath, file);
+  const { error } = await supabase.storage.from('resources').upload(filePath, file);
   if (error) throw error;
-
-  const { data } = supabase.storage.from('i2flow-assets').getPublicUrl(filePath);
+  
+  const { data } = supabase.storage.from('resources').getPublicUrl(filePath);
   return data.publicUrl;
 }
