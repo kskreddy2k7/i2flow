@@ -33,9 +33,18 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     loadData();
-    if (window.location.pathname === '/admin') {
-      setIsAdminView(true);
-    }
+    const handleHashChange = () => {
+      if (window.location.hash === '#/admin') {
+        setIsAdminView(true);
+      } else {
+        setIsAdminView(false);
+      }
+    };
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -68,8 +77,8 @@ export const App: React.FC = () => {
 
   const handleNavClick = (sectionId: string) => {
     setIsAdminView(false);
-    if (window.location.pathname === '/admin') {
-      window.history.pushState({}, '', '/');
+    if (window.location.hash === '#/admin') {
+      window.location.hash = '#/';
     }
 
     if (sectionId === 'home') {
@@ -85,10 +94,10 @@ export const App: React.FC = () => {
 
   const handleAdminToggle = () => {
     if (isAdminView) {
-      window.history.pushState({}, '', '/');
+      window.location.hash = '#/';
       setIsAdminView(false);
     } else {
-      window.history.pushState({}, '', '/admin');
+      window.location.hash = '#/admin';
       setIsAdminView(true);
       window.scrollTo({ top: 0 });
     }
